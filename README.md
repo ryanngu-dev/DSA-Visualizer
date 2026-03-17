@@ -4,7 +4,7 @@ An interactive web app for learning data structures and algorithms through step-
 
 ## Live demo
 
-- Deployed on Vercel: `https://linked-list-visualizer.vercel.app/app`
+- Deployed on Vercel: `https://dsa-visualizer-one-rho.vercel.app/`
 - Source code: `https://github.com/ryanngu-dev/DSA-Visualizer`
 
 ## Features
