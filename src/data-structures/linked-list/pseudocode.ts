@@ -76,7 +76,7 @@ function getPseudocodeForOperation(op: LinkedListOperation | null): string[] {
       '4.   if curr.value == target:',
       '5.       return index',
       '6.   curr = curr.next',
-      '7.   index++',
+      '7.   index = index + 1',
       '8. return -1',
     ]
   }
@@ -112,7 +112,7 @@ function getActiveLineIndicesForStep(op: LinkedListOperation | null, step: Linke
     return []
   }
   if (op.type === 'search') {
-    if (step.type === 'highlight') return [2, 3]
+    if (step.type === 'highlight') return [2, 3, 5, 6]
     if (step.type === 'found') return [3, 4]
     if (step.type === 'notFound') return [7]
     return []
@@ -289,9 +289,9 @@ export function getPseudocodeState(
     if (step.type === 'highlight')
       return {
         lines,
-        activeLineIndices: [2, 3],
+        activeLineIndices: [2, 3, 5, 6],
         executedLineIndices,
-        description: 'while curr != null: compare curr.value with target.',
+        description: 'Compare current node; if not found, advance curr and increment index.',
       }
     if (step.type === 'found')
       return {
