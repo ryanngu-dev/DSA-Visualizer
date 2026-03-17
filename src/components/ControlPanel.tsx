@@ -109,7 +109,7 @@ export default function ControlPanel({
   return (
     <div className="flex flex-col gap-4" role="form" aria-label="Operation controls">
       <div>
-        <label className="block text-sm font-medium text-slate-700 mb-2">Operation</label>
+        <label className="block text-sm font-medium text-slate-700 mb-2 dark:text-slate-200">Operation</label>
         <div className="flex flex-wrap gap-2" role="tablist">
           {(['create', 'search', 'insert', 'remove'] as const).map((op) => (
             <button
@@ -118,7 +118,11 @@ export default function ControlPanel({
               role="tab"
               aria-selected={operation === op}
               onClick={() => setOperation(op)}
-              className="capitalize px-3 py-2 rounded-lg text-sm font-medium transition-colors aria-selected:bg-slate-800 aria-selected:text-white bg-slate-200 text-slate-700 hover:bg-slate-300"
+              className="capitalize px-3 py-2 rounded-lg text-sm font-medium transition-colors
+                         aria-selected:bg-slate-800 aria-selected:text-white
+                         bg-slate-200 text-slate-700 hover:bg-slate-300
+                         dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700
+                         dark:aria-selected:bg-slate-100 dark:aria-selected:text-slate-900"
             >
               {op}
             </button>
@@ -128,7 +132,7 @@ export default function ControlPanel({
 
       {operation === 'create' && (
         <div>
-          <label htmlFor="create-values" className="block text-sm font-medium text-slate-700 mb-1">
+          <label htmlFor="create-values" className="block text-sm font-medium text-slate-700 mb-1 dark:text-slate-200">
             Values (comma or space separated, max {maxNodes} nodes)
           </label>
           <input
@@ -136,11 +140,13 @@ export default function ControlPanel({
             type="text"
             value={createValues}
             onChange={(e) => { setCreateValues(e.target.value); setCreateWarning(null) }}
-            className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm font-mono"
+            className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm font-mono bg-white text-slate-900 placeholder:text-slate-400
+                       focus:outline-none focus:ring-2 focus:ring-accent/40
+                       dark:bg-slate-950 dark:text-slate-100 dark:border-slate-700 dark:placeholder:text-slate-500"
             placeholder="e.g. 22, 2, 77, 6, 43, 76, 89"
           />
           {createWarning && (
-            <p className="mt-1 text-xs text-amber-700" role="status">{createWarning}</p>
+            <p className="mt-1 text-xs text-amber-700 dark:text-amber-300" role="status">{createWarning}</p>
           )}
         </div>
       )}
@@ -148,7 +154,7 @@ export default function ControlPanel({
       {operation === 'insert' && (
         <div className="flex flex-col gap-3">
           <div>
-            <label htmlFor="insert-value" className="block text-sm font-medium text-slate-700 mb-1">
+            <label htmlFor="insert-value" className="block text-sm font-medium text-slate-700 mb-1 dark:text-slate-200">
               Value
             </label>
             <input
@@ -156,16 +162,20 @@ export default function ControlPanel({
               type="number"
               value={insertValue}
               onChange={(e) => setInsertValue(e.target.value)}
-              className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+              className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm bg-white text-slate-900 placeholder:text-slate-400
+                         focus:outline-none focus:ring-2 focus:ring-accent/40
+                         dark:bg-slate-950 dark:text-slate-100 dark:border-slate-700 dark:placeholder:text-slate-500"
               placeholder="e.g. 42"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1">Position</label>
+            <label className="block text-sm font-medium text-slate-700 mb-1 dark:text-slate-200">Position</label>
             <select
               value={insertPosition}
               onChange={(e) => setInsertPosition(e.target.value as InsertPosition)}
-              className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+              className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm bg-white text-slate-900
+                         focus:outline-none focus:ring-2 focus:ring-accent/40
+                         dark:bg-slate-950 dark:text-slate-100 dark:border-slate-700"
             >
               <option value="head">Head</option>
               <option value="tail">Tail</option>
@@ -174,7 +184,7 @@ export default function ControlPanel({
           </div>
           {insertPosition === 'index' && (
             <div>
-              <label htmlFor="insert-index" className="block text-sm font-medium text-slate-700 mb-1">
+              <label htmlFor="insert-index" className="block text-sm font-medium text-slate-700 mb-1 dark:text-slate-200">
                 Index
               </label>
               <input
@@ -183,12 +193,14 @@ export default function ControlPanel({
                 min={0}
                 value={insertIndex}
                 onChange={(e) => setInsertIndex(e.target.value)}
-                className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm bg-white text-slate-900
+                           focus:outline-none focus:ring-2 focus:ring-accent/40
+                           dark:bg-slate-950 dark:text-slate-100 dark:border-slate-700"
               />
             </div>
           )}
           {insertWarning && (
-            <p className="mt-1 text-xs text-amber-700" role="status">{insertWarning}</p>
+            <p className="mt-1 text-xs text-amber-700 dark:text-amber-300" role="status">{insertWarning}</p>
           )}
         </div>
       )}
@@ -196,11 +208,13 @@ export default function ControlPanel({
       {operation === 'remove' && (
         <div className="flex flex-col gap-3">
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1">Remove by</label>
+            <label className="block text-sm font-medium text-slate-700 mb-1 dark:text-slate-200">Remove by</label>
             <select
               value={removeMode}
               onChange={(e) => setRemoveMode(e.target.value as RemoveMode)}
-              className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+              className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm bg-white text-slate-900
+                         focus:outline-none focus:ring-2 focus:ring-accent/40
+                         dark:bg-slate-950 dark:text-slate-100 dark:border-slate-700"
             >
               <option value="index">Index</option>
               <option value="value">Value</option>
@@ -208,7 +222,7 @@ export default function ControlPanel({
           </div>
           {removeMode === 'index' ? (
             <div>
-              <label htmlFor="remove-index" className="block text-sm font-medium text-slate-700 mb-1">
+              <label htmlFor="remove-index" className="block text-sm font-medium text-slate-700 mb-1 dark:text-slate-200">
                 Index
               </label>
               <input
@@ -217,12 +231,14 @@ export default function ControlPanel({
                 min={0}
                 value={removeIndex}
                 onChange={(e) => setRemoveIndex(e.target.value)}
-                className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm bg-white text-slate-900
+                           focus:outline-none focus:ring-2 focus:ring-accent/40
+                           dark:bg-slate-950 dark:text-slate-100 dark:border-slate-700"
               />
             </div>
           ) : (
             <div>
-              <label htmlFor="remove-value" className="block text-sm font-medium text-slate-700 mb-1">
+              <label htmlFor="remove-value" className="block text-sm font-medium text-slate-700 mb-1 dark:text-slate-200">
                 Value
               </label>
               <input
@@ -230,7 +246,9 @@ export default function ControlPanel({
                 type="number"
                 value={removeValue}
                 onChange={(e) => setRemoveValue(e.target.value)}
-                className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm bg-white text-slate-900 placeholder:text-slate-400
+                           focus:outline-none focus:ring-2 focus:ring-accent/40
+                           dark:bg-slate-950 dark:text-slate-100 dark:border-slate-700 dark:placeholder:text-slate-500"
                 placeholder="e.g. 42"
               />
             </div>
@@ -240,7 +258,7 @@ export default function ControlPanel({
 
       {operation === 'search' && (
         <div>
-          <label htmlFor="search-value" className="block text-sm font-medium text-slate-700 mb-1">
+          <label htmlFor="search-value" className="block text-sm font-medium text-slate-700 mb-1 dark:text-slate-200">
             Value
           </label>
           <input
@@ -248,7 +266,9 @@ export default function ControlPanel({
             type="number"
             value={searchValue}
             onChange={(e) => setSearchValue(e.target.value)}
-            className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+            className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm bg-white text-slate-900 placeholder:text-slate-400
+                       focus:outline-none focus:ring-2 focus:ring-accent/40
+                       dark:bg-slate-950 dark:text-slate-100 dark:border-slate-700 dark:placeholder:text-slate-500"
             placeholder="e.g. 42"
           />
         </div>
@@ -258,7 +278,9 @@ export default function ControlPanel({
         <button
           type="button"
           onClick={handleRun}
-          className="px-4 py-2 rounded-lg bg-emerald-600 text-white text-sm font-medium hover:bg-emerald-700 transition-colors"
+          className="px-4 py-2 rounded-lg bg-emerald-600 text-white text-sm font-medium hover:bg-emerald-700 transition-colors
+                     focus:outline-none focus:ring-2 focus:ring-emerald-400/50 focus:ring-offset-2 focus:ring-offset-white
+                     dark:focus:ring-offset-slate-900"
         >
           Run
         </button>

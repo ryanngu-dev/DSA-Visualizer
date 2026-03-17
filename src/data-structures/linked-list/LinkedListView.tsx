@@ -28,17 +28,18 @@ function HeadPointer({
       ref={containerRef}
     >
       <div
-        className="px-3 py-2 rounded-lg shrink-0 bg-white border border-slate-200 shadow-sm flex items-center gap-2"
+        className="px-3 py-2 rounded-lg shrink-0 bg-white border border-slate-200 shadow-sm flex items-center gap-2
+                   dark:bg-slate-900 dark:border-slate-700 dark:shadow-none"
         aria-label="Head pointer"
       >
-        <span className="text-sm font-semibold text-slate-600 tracking-wide">head</span>
-        <span className="w-2 h-2 rounded-full bg-slate-400" aria-hidden />
+        <span className="text-sm font-semibold text-slate-600 tracking-wide dark:text-slate-200">head</span>
+        <span className="w-2 h-2 rounded-full bg-slate-400 dark:bg-slate-500" aria-hidden />
       </div>
       <span className="flex items-center w-6 justify-center">
         {!hideArrow && (
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            className="h-6 w-6 shrink-0 text-slate-400"
+            className="h-6 w-6 shrink-0 text-slate-400 dark:text-slate-500"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -61,11 +62,12 @@ function NullPointer({
   return (
     <div
       ref={containerRef}
-      className="rounded-lg shrink-0 bg-white border border-slate-200 shadow-sm flex items-center gap-2 px-3 py-2 select-none"
+      className="rounded-lg shrink-0 bg-white border border-slate-200 shadow-sm flex items-center gap-2 px-3 py-2 select-none
+                 dark:bg-slate-900 dark:border-slate-700 dark:shadow-none"
       aria-label="Null pointer"
     >
-      <span className="w-2 h-2 rounded-full border-2 border-slate-300 bg-transparent" aria-hidden />
-      <span className="text-sm font-semibold text-slate-500">null</span>
+      <span className="w-2 h-2 rounded-full border-2 border-slate-300 bg-transparent dark:border-slate-500" aria-hidden />
+      <span className="text-sm font-semibold text-slate-500 dark:text-slate-300">null</span>
     </div>
   )
 }
@@ -75,7 +77,7 @@ function Arrow() {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      className="h-6 w-6 shrink-0 text-slate-400"
+      className="h-6 w-6 shrink-0 text-slate-400 dark:text-slate-500"
       fill="none"
       viewBox="0 0 24 24"
       stroke="currentColor"
@@ -105,7 +107,7 @@ function Node({
         ? 'border-emerald-400 bg-emerald-500 text-white'
         : highlight
           ? 'border-indigo-400 bg-indigo-500 text-white'
-          : 'border-slate-200 bg-white text-slate-800'
+          : 'border-slate-200 bg-white text-slate-800 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100'
 
   return (
     <motion.div
@@ -132,13 +134,13 @@ function Node({
       }}
       className={`flex items-center rounded-lg border shrink-0 overflow-hidden shadow-sm w-[120px] h-[52px] min-w-[120px] min-h-[52px] ${roleStyle}`}
     >
-      <div className="w-[60%] border-r border-slate-200 h-full flex items-center pl-3">
-        <span className={`truncate text-sm font-medium ${isRemoving || isFound || highlight ? 'text-white' : 'text-slate-800'}`}>
+      <div className="w-[60%] border-r border-slate-200 h-full flex items-center pl-3 dark:border-slate-700">
+        <span className={`truncate text-sm font-medium ${isRemoving || isFound || highlight ? 'text-white' : 'text-slate-800 dark:text-slate-100'}`}>
           {String(data.value)}
         </span>
       </div>
       <div className="w-[40%] h-full flex items-center justify-center">
-        <span className={`text-xs font-medium ${isRemoving || isFound || highlight ? 'text-white/90' : 'text-slate-500'}`}>
+        <span className={`text-xs font-medium ${isRemoving || isFound || highlight ? 'text-white/90' : 'text-slate-500 dark:text-slate-400'}`}>
           next
         </span>
       </div>
