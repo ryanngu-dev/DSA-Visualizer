@@ -293,20 +293,24 @@ export function getPseudocodeState(
         executedLineIndices,
         description: 'Compare current node; if not found, advance curr and increment index.',
       }
-    if (step.type === 'found')
+    if (step.type === 'found') {
+      const allExecuted = Array.from({ length: lines.length }, (_, i) => i)
       return {
         lines,
         activeLineIndices: [3, 4],
-        executedLineIndices,
+        executedLineIndices: allExecuted,
         description: 'Match found; return index.',
       }
-    if (step.type === 'notFound')
+    }
+    if (step.type === 'notFound') {
+      const allExecuted = Array.from({ length: lines.length }, (_, i) => i)
       return {
         lines,
         activeLineIndices: [7],
-        executedLineIndices,
+        executedLineIndices: allExecuted,
         description: 'Reached end of list; return -1.',
       }
+    }
   }
 
   return {
