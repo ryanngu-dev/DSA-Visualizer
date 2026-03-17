@@ -37,35 +37,35 @@ function getPseudocodeForOperation(op: LinkedListOperation | null): string[] {
     }
     return [
       '1. new = Node(value)',
-      '2. curr = head',
-      '3. for k = 0 to index-1:',
-      '4.     curr = curr.next',
-      '5. new.next = curr.next',
-      '6. curr.next = new',
+      '2. if index <= 0: new.next = head; head = new; return',
+      '3. prev = head',
+      '4. for k = 0 to index-2:',
+      '5.     prev = prev.next',
+      '6. new.next = prev.next; prev.next = new',
     ]
   }
   if (op.type === 'remove') {
     if (op.mode === 'index') {
       return [
-        '1. if empty, do nothing',
-        '2. Vertex pre = head',
-        '3. for (k = 0; k < i-1; k++)',
-        '4.     pre = pre.next',
-        '5. Vertex del = pre.next',
-        '6. Vertex aft = del.next',
-        '7. pre.next = aft  // bypass del',
+        '1. if head == null: return',
+        '2. if index == 0: head = head.next; return',
+        '3. prev = head',
+        '4. for k = 0 to index-2:',
+        '5.     prev = prev.next',
+        '6. del = prev.next',
+        '7. prev.next = del.next  // bypass del',
         '8. delete del',
       ]
     }
     return [
-      '1. if empty, return',
-      '2. Vertex pre = null',
-      '3. Vertex curr = head',
-      '4. while curr != null and curr.value != target:',
-      '5.     pre = curr',
-      '6.     curr = curr.next',
-      '7. if curr != null:',
-      '8.     pre.next = curr.next',
+      '1. if head == null: return',
+      '2. if head.value == target: head = head.next; return',
+      '3. prev = head',
+      '4. curr = head.next',
+      '5. while curr != null and curr.value != target:',
+      '6.     prev = curr; curr = curr.next',
+      '7. if curr == null: return  // not found',
+      '8. prev.next = curr.next  // bypass curr',
     ]
   }
   if (op.type === 'search') {
@@ -94,20 +94,21 @@ function getActiveLineIndicesForStep(op: LinkedListOperation | null, step: Linke
     if (op.position === 'head' && step.type === 'insertHead') return [0, 1, 2]
     if (op.position === 'tail' && step.type === 'highlight') return [1]
     if (op.position === 'tail' && step.type === 'insertTail') return [4, 5]
-    if (op.position === 'index' && step.type === 'highlight') return [1, 2]
-    if (op.position === 'index' && step.type === 'insertAt') return [4, 5]
+    if (op.position === 'index' && step.type === 'highlight') return [2, 3, 4]
+    if (op.position === 'index' && step.type === 'insertAt') return step.index <= 0 ? [1] : [5]
     return []
   }
   if (op.type === 'remove') {
     if (op.mode === 'index' && step.type === 'highlight') {
-      return step.index === 0 ? [1, 2] : [2, 3]
+      return [2, 3, 4]
     }
-    if (op.mode === 'index' && step.type === 'reroute') return [4, 5, 6]
-    if (op.mode === 'index' && step.type === 'removeAt') return [7]
-    if (op.mode === 'value' && step.type === 'highlight') return [2, 3]
-    if (op.mode === 'value' && step.type === 'reroute') return [7]
-    if (op.mode === 'value' && step.type === 'removeByValue') return [7]
-    if (op.mode === 'value' && step.type === 'notFound') return [3]
+    if (op.mode === 'index' && step.type === 'reroute') return step.index === 0 ? [1] : [5, 6]
+    if (op.mode === 'index' && step.type === 'removeAt') return step.index === 0 ? [1] : [7]
+    if (op.mode === 'value' && step.type === 'highlight') return step.index === 0 ? [1] : [4, 5, 6]
+    if (op.mode === 'value' && step.type === 'found') return step.index === 0 ? [1] : [4, 5, 6]
+    if (op.mode === 'value' && step.type === 'reroute') return step.index === 0 ? [1] : [7]
+    if (op.mode === 'value' && step.type === 'removeByValue') return step.value !== undefined ? [7] : []
+    if (op.mode === 'value' && step.type === 'notFound') return [6]
     return []
   }
   if (op.type === 'search') {
@@ -197,16 +198,16 @@ export function getPseudocodeState(
       if (step.type === 'highlight')
         return {
           lines,
-          activeLineIndices: [1, 2],
+          activeLineIndices: [2, 3, 4],
           executedLineIndices,
-          description: 'curr = head; traverse to node at index-1.',
+          description: 'prev = head; traverse until you reach index-1.',
         }
       if (step.type === 'insertAt')
         return {
           lines,
-          activeLineIndices: [4, 5],
+          activeLineIndices: step.index <= 0 ? [1] : [5],
           executedLineIndices,
-          description: 'new.next = curr.next; curr.next = new.',
+          description: step.index <= 0 ? 'Insert at head: new.next = head; head = new.' : 'new.next = prev.next; prev.next = new.',
         }
       if (step.type === 'done') {
         const allExecuted = Array.from({ length: lines.length }, (_, i) => i)
@@ -218,26 +219,29 @@ export function getPseudocodeState(
   if (op.type === 'remove') {
     if (op.mode === 'index') {
       if (step.type === 'highlight') {
-        const active = step.index === 0 ? [1, 2] : [2, 3]
-        const desc = step.index === 0
-          ? 'Vertex pre = head; enter for loop to reach node at index i-1.'
-          : 'pre = pre.next (traverse to next node).'
-        return { lines, activeLineIndices: active, executedLineIndices, description: desc }
+        return {
+          lines,
+          activeLineIndices: [2, 3, 4],
+          executedLineIndices,
+          description: 'Traverse to the node just before the one you want to remove.',
+        }
       }
-      if (step.type === 'reroute')
+      if (step.type === 'reroute') {
         return {
           lines,
-          activeLineIndices: [4, 5, 6],
+          activeLineIndices: step.index === 0 ? [1] : [5, 6],
           executedLineIndices,
-          description: 'Vertex del = pre.next; Vertex aft = del.next; pre.next = aft (bypass del).',
+          description: step.index === 0 ? 'Removing head: head = head.next.' : 'del = prev.next; prev.next = del.next (bypass del).',
         }
-      if (step.type === 'removeAt')
+      }
+      if (step.type === 'removeAt') {
         return {
           lines,
-          activeLineIndices: [7],
+          activeLineIndices: step.index === 0 ? [1] : [7],
           executedLineIndices,
-          description: 'delete del (remove the node).',
+          description: step.index === 0 ? 'Head removal complete.' : 'delete del (remove the node).',
         }
+      }
       if (step.type === 'done') {
         const allExecuted = Array.from({ length: lines.length }, (_, i) => i)
         return { lines, activeLineIndices: [], executedLineIndices: allExecuted, description: 'Remove at index complete.' }
@@ -247,30 +251,37 @@ export function getPseudocodeState(
       if (step.type === 'highlight')
         return {
           lines,
-          activeLineIndices: [2, 3],
+          activeLineIndices: step.index === 0 ? [1] : [4, 5, 6],
           executedLineIndices,
-          description: 'curr = head; traverse while curr != target.',
+          description: step.index === 0 ? 'Check if head is the target.' : 'Scan forward until you find the target value.',
+        }
+      if (step.type === 'found')
+        return {
+          lines,
+          activeLineIndices: step.index === 0 ? [1] : [4, 5, 6],
+          executedLineIndices,
+          description: 'Target found.',
         }
       if (step.type === 'reroute')
         return {
           lines,
-          activeLineIndices: [7],
+          activeLineIndices: step.index === 0 ? [1] : [7],
           executedLineIndices,
-          description: 'pre.next = curr.next (bypass the node to remove).',
+          description: step.index === 0 ? 'Removing head: head = head.next.' : 'prev.next = curr.next (bypass curr).',
         }
       if (step.type === 'removeByValue')
         return {
           lines,
           activeLineIndices: [7],
           executedLineIndices,
-          description: 'pre.next = curr.next (unlink the node).',
+          description: 'Unlink the node (removal happens here).',
         }
       if (step.type === 'done') {
         const allExecuted = Array.from({ length: lines.length }, (_, i) => i)
         return { lines, activeLineIndices: [], executedLineIndices: allExecuted, description: 'Remove by value complete.' }
       }
       if (step.type === 'notFound')
-        return { lines, activeLineIndices: [3], executedLineIndices, description: 'Reached end of list; value not found. No removal.' }
+        return { lines, activeLineIndices: [6], executedLineIndices, description: 'Reached end of list; value not found. No removal.' }
     }
   }
 
