@@ -34,14 +34,7 @@ export default function LinkedListVisualizer() {
           <ControlPanel
             list={list}
             setSteps={viz.setSteps}
-            nextStep={viz.nextStep}
-            prevStep={viz.prevStep}
-            reset={viz.reset}
             play={viz.play}
-            canStep={viz.canStep}
-            canPrev={viz.canPrev}
-            canPlay={viz.canPlay}
-            hasSteps={viz.hasSteps}
             maxNodes={maxNodes}
           />
         </section>

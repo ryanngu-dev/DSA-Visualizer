@@ -17,28 +17,14 @@ type Operation = 'create' | 'search' | 'insert' | 'remove'
 interface ControlPanelProps {
   list: LinkedList
   setSteps: (steps: import('../data-structures/linked-list/types').LinkedListStep[], op: LinkedListOperation | null) => void
-  nextStep: () => void
-  prevStep: () => void
-  reset: () => void
   play: () => void
-  canStep: boolean
-  canPrev: boolean
-  canPlay: boolean
-  hasSteps: boolean
   maxNodes?: number
 }
 
 export default function ControlPanel({
   list,
   setSteps,
-  nextStep,
-  prevStep,
-  reset,
   play,
-  canStep,
-  canPrev,
-  canPlay,
-  hasSteps,
   maxNodes = 14,
 }: ControlPanelProps) {
   const [operation, setOperation] = useState<Operation>('create')
@@ -117,44 +103,6 @@ export default function ControlPanel({
       if (Number.isNaN(value)) return
       setSteps(stepsForSearch(list, value), op)
       play()
-    }
-  }
-
-  const handleStep = () => {
-    if (hasSteps && canStep) {
-      nextStep()
-      return
-    }
-    const op = getOperationContext()
-    if (operation === 'create') {
-      let values = (op.type === 'create' && op.values.length > 0) ? op.values : [22, 2, 77, 6, 43, 76]
-      values = values.slice(0, maxNodes)
-      setSteps(stepsForCreate(list, values), op)
-    } else if (operation === 'insert') {
-      setInsertWarning(null)
-      if (list.length >= maxNodes) {
-        setInsertWarning(`Maximum of ${maxNodes} nodes reached. Remove a node before inserting another.`)
-        return
-      }
-      const value = Number(insertValue)
-      if (Number.isNaN(value)) return
-      const steps =
-        insertPosition === 'head'
-          ? stepsForInsertHead(list, value)
-          : insertPosition === 'tail'
-            ? stepsForInsertTail(list, value)
-            : stepsForInsertAt(list, Number(insertIndex) || 0, value)
-      setSteps(steps, op)
-    } else if (operation === 'remove') {
-      const steps =
-        removeMode === 'index'
-          ? stepsForRemoveAt(list, Number(removeIndex) || 0)
-          : stepsForRemoveByValue(list, Number(removeValue) || 0)
-      setSteps(steps, op)
-    } else {
-      const value = Number(searchValue)
-      if (Number.isNaN(value)) return
-      setSteps(stepsForSearch(list, value), op)
     }
   }
 
