@@ -1,17 +1,23 @@
 # Data Structure & Algorithm Visualizer
 
-A web app that visualizes data structures and algorithms step by step. Built to demonstrate understanding of DS&A and clean frontend architecture.
+An interactive web app for learning data structures and algorithms through step-by-step visualization.
+
+## Live demo
+
+- Deployed on Vercel: `https://linked-list-visualizer.vercel.app/app`
+- Source code: `https://github.com/ryanngu-dev/DSA-Visualizer`
 
 ## Features
 
 - **Linked List** (current): Insert (at head, tail, or index), remove (by index or value), and search with step-by-step visualization.
+- **Theme**: Light / Dark / System toggle.
 - **Planned**: Binary search tree, graph traversals, and more.
 
 ## Run locally
 
 ```bash
-git clone <repo-url>
-cd data-structure-visualizer
+git clone https://github.com/ryanngu-dev/DSA-Visualizer.git
+cd DSA-Visualizer
 npm install
 npm run dev
 ```
@@ -24,7 +30,7 @@ Open [http://localhost:5173](http://localhost:5173) in your browser.
 npm run build
 ```
 
-Output is in `dist/`. You can deploy to GitHub Pages, Vercel, or any static host.
+Output is in `dist/`.
 
 ## Tech
 
