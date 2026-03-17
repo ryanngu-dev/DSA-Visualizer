@@ -30,7 +30,7 @@ export default function LinkedListVisualizer() {
 
       {/* Bottom: left = Create/Search/Insert/Remove, right = pseudocode + step controls */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <section className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm" aria-label="Operations">
+        <section className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-800 dark:bg-slate-900" aria-label="Operations">
           <ControlPanel
             list={list}
             setSteps={viz.setSteps}
@@ -38,7 +38,7 @@ export default function LinkedListVisualizer() {
             maxNodes={maxNodes}
           />
         </section>
-        <section className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm" aria-label="Pseudocode">
+        <section className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-800 dark:bg-slate-900" aria-label="Pseudocode">
           <PseudocodePanel
             operation={viz.operation}
             currentStep={viz.currentStep}

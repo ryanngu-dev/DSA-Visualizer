@@ -11,7 +11,8 @@ interface VisualizationCanvasProps {
 export default function VisualizationCanvas({ children }: VisualizationCanvasProps) {
   return (
     <div
-      className="rounded-xl border border-slate-200 bg-white shadow-sm p-6 min-h-[320px] flex flex-col items-center justify-center"
+      className="rounded-xl border border-slate-200 bg-white shadow-sm p-6 min-h-[320px] flex flex-col items-center justify-center
+                 dark:border-slate-800 dark:bg-slate-900"
       aria-label="Visualization canvas"
     >
       {children}
