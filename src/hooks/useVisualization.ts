@@ -45,6 +45,7 @@ export function useVisualization(list: LinkedList) {
   const [nodes, setNodes] = useState<NodeSnapshot[]>(() => list.toArray())
   const [isPlaying, setIsPlaying] = useState(false)
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null)
+  const pendingPlayRef = useRef(false)
 
   const setSteps = useCallback(
     (newSteps: LinkedListStep[], op: LinkedListOperation | null = null) => {
@@ -142,7 +143,20 @@ export function useVisualization(list: LinkedList) {
   }, [isPlaying, stepIndex, steps.length, nextStep])
 
   const play = useCallback(() => {
+    // If play is invoked before steps state has updated (common right after setSteps),
+    // queue it and start as soon as steps arrive.
+    if (steps.length === 0) {
+      pendingPlayRef.current = true
+      return
+    }
+    pendingPlayRef.current = false
+    setIsPlaying(true)
+  }, [steps.length])
+
+  useEffect(() => {
+    if (!pendingPlayRef.current) return
     if (steps.length === 0) return
+    pendingPlayRef.current = false
     setIsPlaying(true)
   }, [steps.length])
 
