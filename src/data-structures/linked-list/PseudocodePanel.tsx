@@ -73,7 +73,7 @@ export default function PseudocodePanel({
               ref={isCurrent ? activeLineRef : undefined}
               className={`
                 py-0.5 px-2 -mx-2 rounded
-                ${isCurrent ? 'bg-slate-800 text-white' : ''}
+                ${isCurrent ? 'bg-indigo-600/90 text-white ring-1 ring-indigo-300' : ''}
                 ${isExecuted ? 'bg-emerald-100 text-emerald-900' : ''}
                 ${!isCurrent && !isExecuted ? 'text-slate-700' : ''}
               `}

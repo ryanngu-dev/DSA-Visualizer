@@ -235,10 +235,11 @@ export function getPseudocodeState(
         }
       }
       if (step.type === 'removeAt') {
+        const allExecuted = Array.from({ length: lines.length }, (_, i) => i)
         return {
           lines,
           activeLineIndices: step.index === 0 ? [1] : [7],
-          executedLineIndices,
+          executedLineIndices: allExecuted,
           description: step.index === 0 ? 'Head removal complete.' : 'delete del (remove the node).',
         }
       }
@@ -270,11 +271,14 @@ export function getPseudocodeState(
           description: step.index === 0 ? 'Removing head: head = head.next.' : 'prev.next = curr.next (bypass curr).',
         }
       if (step.type === 'removeByValue')
-        return {
+        {
+          const allExecuted = Array.from({ length: lines.length }, (_, i) => i)
+          return {
           lines,
           activeLineIndices: [7],
-          executedLineIndices,
+          executedLineIndices: allExecuted,
           description: 'Unlink the node (removal happens here).',
+          }
         }
       if (step.type === 'done') {
         const allExecuted = Array.from({ length: lines.length }, (_, i) => i)
