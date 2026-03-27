@@ -11,7 +11,7 @@ An interactive web app for learning data structures and algorithms through step-
 
 - **Linked List** (current): Insert (at head, tail, or index), remove (by index or value), and search with step-by-step visualization.
 - **Theme**: Light / Dark / System toggle.
-- **Planned**: Binary search tree, graph traversals, and more.
+- **Planned**: Graph traversals, and more.
 
 ## Run locally
 
