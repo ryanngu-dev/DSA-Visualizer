@@ -1,27 +1,19 @@
 import { useState, useCallback, useRef, useEffect } from 'react'
-import type { LinkedListStep } from '../data-structures/linked-list/types'
-import type { NodeSnapshot } from '../data-structures/linked-list/types'
-import type { LinkedList } from '../data-structures/linked-list/LinkedList'
+import type { BSTStep } from '../data-structures/binary-search-tree/types'
+import type { BSTSnapshotNode } from '../data-structures/binary-search-tree/types'
+import type { BinarySearchTree } from '../data-structures/binary-search-tree/BinarySearchTree'
+import type { BSTOperation } from '../data-structures/binary-search-tree/types'
 
-function applyStep(step: LinkedListStep, list: LinkedList): void {
+function applyStep(step: BSTStep, tree: BinarySearchTree): void {
   switch (step.type) {
-    case 'createClear':
-      list.clear()
+    case 'clear':
+      tree.clear()
       break
-    case 'insertHead':
-      list.insertHead(step.value)
+    case 'insert':
+      tree.insert(step.value)
       break
-    case 'insertTail':
-      list.insertTail(step.value)
-      break
-    case 'insertAt':
-      list.insertAt(step.index, step.value)
-      break
-    case 'removeAt':
-      list.removeAt(step.index)
-      break
-    case 'removeByValue':
-      list.removeByValue(step.value)
+    case 'remove':
+      tree.remove(step.value)
       break
     default:
       break
@@ -30,25 +22,19 @@ function applyStep(step: LinkedListStep, list: LinkedList): void {
 
 const STEP_MS = 1600
 
-export type LinkedListOperation =
-  | { type: 'create'; values: number[] }
-  | { type: 'insert'; position: 'head' | 'tail' | 'index'; value: number; index?: number }
-  | { type: 'remove'; mode: 'index' | 'value'; index?: number; value?: number }
-  | { type: 'search'; value: number }
-
-export function useVisualization(list: LinkedList) {
-  const [steps, setStepsState] = useState<LinkedListStep[]>([])
+export function useBstVisualization(tree: BinarySearchTree) {
+  const [steps, setStepsState] = useState<BSTStep[]>([])
   const [stepIndex, setStepIndex] = useState(0)
-  const [stepStates, setStepStates] = useState<NodeSnapshot[][]>([])
-  const [snapshot, setSnapshot] = useState<NodeSnapshot[]>([])
-  const [operation, setOperationState] = useState<LinkedListOperation | null>(null)
-  const [nodes, setNodes] = useState<NodeSnapshot[]>(() => list.toArray())
+  const [stepStates, setStepStates] = useState<(BSTSnapshotNode | null)[]>([])
+  const [snapshot, setSnapshot] = useState<BSTSnapshotNode | null>(() => tree.toSnapshot())
+  const [operation, setOperationState] = useState<BSTOperation | null>(null)
+  const [nodes, setNodes] = useState<BSTSnapshotNode | null>(() => tree.toSnapshot())
   const [isPlaying, setIsPlaying] = useState(false)
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null)
   const pendingPlayRef = useRef(false)
 
   const setSteps = useCallback(
-    (newSteps: LinkedListStep[], op: LinkedListOperation | null = null) => {
+    (newSteps: BSTStep[], op: BSTOperation | null = null) => {
       if (newSteps.length === 0) {
         setStepsState([])
         setStepIndex(0)
@@ -56,12 +42,12 @@ export function useVisualization(list: LinkedList) {
         setOperationState(null)
         return
       }
-      const snap = list.toArray()
-      list.setFromSnapshot(snap)
-      const states: NodeSnapshot[][] = [list.toArray()]
+      const snap = tree.toSnapshot()
+      tree.setFromSnapshot(snap)
+      const states: (BSTSnapshotNode | null)[] = [tree.toSnapshot()]
       for (let i = 0; i < newSteps.length; i++) {
-        applyStep(newSteps[i]!, list)
-        states.push(list.toArray())
+        applyStep(newSteps[i]!, tree)
+        states.push(tree.toSnapshot())
       }
       setSnapshot(snap)
       setStepStates(states)
@@ -70,7 +56,7 @@ export function useVisualization(list: LinkedList) {
       setStepIndex(0)
       setNodes(states[1] ?? states[0]!)
     },
-    [list]
+    [tree]
   )
 
   const [stepDirection, setStepDirection] = useState<1 | -1>(1)
@@ -97,8 +83,8 @@ export function useVisualization(list: LinkedList) {
   }, [stepIndex, stepStates])
 
   const currentStepForDisplay = stepIndex < steps.length ? steps[stepIndex] : null
-  const isRemoveStep = currentStepForDisplay?.type === 'removeAt' || currentStepForDisplay?.type === 'removeByValue'
-  const displayedNodes =
+  const isRemoveStep = currentStepForDisplay?.type === 'remove'
+  const displayedSnapshot =
     stepStates.length > 0
       ? stepStates[
           stepDirection === -1
@@ -110,8 +96,8 @@ export function useVisualization(list: LinkedList) {
       : nodes
 
   const reset = useCallback(() => {
-    list.setFromSnapshot(snapshot)
-    setNodes(list.toArray())
+    tree.setFromSnapshot(snapshot)
+    setNodes(tree.toSnapshot())
     setStepsState([])
     setStepIndex(0)
     setStepStates([])
@@ -121,7 +107,7 @@ export function useVisualization(list: LinkedList) {
       clearInterval(intervalRef.current)
       intervalRef.current = null
     }
-  }, [list, snapshot])
+  }, [tree, snapshot])
 
   useEffect(() => {
     if (!isPlaying || stepIndex >= steps.length) {
@@ -143,8 +129,6 @@ export function useVisualization(list: LinkedList) {
   }, [isPlaying, stepIndex, steps.length, nextStep])
 
   const play = useCallback(() => {
-    // If play is invoked before steps state has updated (common right after setSteps),
-    // queue it and start as soon as steps arrive.
     if (steps.length === 0) {
       pendingPlayRef.current = true
       return
@@ -172,7 +156,7 @@ export function useVisualization(list: LinkedList) {
   const totalSteps = steps.length
 
   return {
-    nodes: displayedNodes,
+    treeSnapshot: displayedSnapshot,
     currentStep,
     message,
     operation,
