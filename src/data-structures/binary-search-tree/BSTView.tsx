@@ -13,7 +13,6 @@ interface BSTViewProps {
 function roleFromStep(
   step: BSTStep | null,
   id: string,
-  value: number,
   snapshot: BSTSnapshotNode | null
 ): 'normal' | 'current' | 'found' | 'removing' | 'visit' {
   if (!step) return 'normal'
@@ -100,7 +99,7 @@ export default function BSTView({ treeSnapshot, currentStep, message }: BSTViewP
             )
           })}
           {nodes.map((n) => {
-            const role = roleFromStep(currentStep, n.id, n.value, treeSnapshot)
+            const role = roleFromStep(currentStep, n.id, treeSnapshot)
             const cls = roleClasses[role]
             return (
               <g key={n.id}>

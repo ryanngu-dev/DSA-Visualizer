@@ -35,7 +35,7 @@ function buildInsertSteps(tree: BinarySearchTree, value: number): BSTStep[] {
   return steps
 }
 
-export function stepsForCreate(tree: BinarySearchTree, values: number[]): BSTStep[] {
+export function stepsForCreate(_tree: BinarySearchTree, values: number[]): BSTStep[] {
   const steps: BSTStep[] = [{ type: 'clear', message: 'Empty the tree' }]
   const scratch = new BinarySearchTree()
   for (const v of values) {

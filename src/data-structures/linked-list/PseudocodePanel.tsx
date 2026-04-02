@@ -1,4 +1,3 @@
-import { useRef, useEffect } from 'react'
 import { getPseudocodeState } from './pseudocode'
 import type { LinkedListStep } from './types'
 import type { LinkedListOperation } from '../../hooks/useVisualization'
@@ -34,12 +33,6 @@ export default function PseudocodePanel({
     stepIndex,
     steps
   )
-  const activeLineRef = useRef<HTMLDivElement>(null)
-
-  useEffect(() => {
-    activeLineRef.current?.scrollIntoView({ block: 'nearest', behavior: 'smooth' })
-  }, [stepIndex, activeLineIndices])
-
   if (lines.length === 0) {
     return (
       <div className="rounded-xl border border-slate-200 bg-slate-100/80 p-4 dark:border-slate-800 dark:bg-slate-950/40">
@@ -70,7 +63,6 @@ export default function PseudocodePanel({
           return (
             <div
               key={i}
-              ref={isCurrent ? activeLineRef : undefined}
               className={`
                 py-0.5 px-2 -mx-2 rounded
                 ${isCurrent ? 'bg-indigo-600/90 text-white ring-1 ring-indigo-300' : ''}

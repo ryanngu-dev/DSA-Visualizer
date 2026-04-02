@@ -3,6 +3,7 @@ import Layout from './components/Layout'
 import type { DataStructureId } from './types/common'
 import LinkedListVisualizer from './data-structures/linked-list'
 import BinarySearchTreeVisualizer from './data-structures/binary-search-tree'
+import GraphTraversalVisualizer from './data-structures/graph-traversal'
 
 export default function App() {
   const [dataStructure, setDataStructure] = useState<DataStructureId>('linked-list')
@@ -35,6 +36,19 @@ export default function App() {
       >
         Binary Search Tree
       </button>
+      <button
+        type="button"
+        role="tab"
+        aria-selected={dataStructure === 'graph-traversal'}
+        onClick={() => setDataStructure('graph-traversal')}
+        className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-950 ${
+          dataStructure === 'graph-traversal'
+            ? 'bg-accent text-white shadow-md ring-2 ring-accent/60 ring-offset-2 ring-offset-white dark:ring-offset-slate-950'
+            : 'bg-slate-100 text-slate-700 hover:bg-slate-200 dark:bg-slate-900 dark:text-slate-200 dark:hover:bg-slate-800'
+        }`}
+      >
+        Graph (BFS / DFS)
+      </button>
     </div>
   )
 
@@ -44,6 +58,8 @@ export default function App() {
         <LinkedListVisualizer />
       ) : dataStructure === 'binary-search-tree' ? (
         <BinarySearchTreeVisualizer />
+      ) : dataStructure === 'graph-traversal' ? (
+        <GraphTraversalVisualizer />
       ) : (
         <p className="text-slate-500">Select a data structure.</p>
       )}

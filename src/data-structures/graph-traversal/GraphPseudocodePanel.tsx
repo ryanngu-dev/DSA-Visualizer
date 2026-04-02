@@ -1,12 +1,12 @@
-import { getBstPseudocodeState } from './pseudocode'
-import type { BSTStep } from './types'
-import type { BSTOperation } from './types'
+import { getGraphPseudocodeState } from './pseudocode'
+import type { GraphTraversalStep } from './types'
+import type { GraphOperation } from './types'
 
-interface BstPseudocodePanelProps {
-  operation: BSTOperation | null
-  currentStep: BSTStep | null
+interface GraphPseudocodePanelProps {
+  operation: GraphOperation | null
+  currentStep: GraphTraversalStep | null
   stepIndex: number
-  steps: BSTStep[]
+  steps: GraphTraversalStep[]
   onPrev: () => void
   onNext: () => void
   canPrev: boolean
@@ -14,16 +14,7 @@ interface BstPseudocodePanelProps {
   onReset: () => void
 }
 
-function operationTitle(op: BSTOperation | null): string {
-  if (!op) return 'Pseudocode'
-  if (op.type === 'create') return 'Create'
-  if (op.type === 'insert') return 'Insert'
-  if (op.type === 'search') return 'Search'
-  if (op.type === 'remove') return 'Remove'
-  return `Traverse (${op.order})`
-}
-
-export default function BstPseudocodePanel({
+export default function GraphPseudocodePanel({
   operation,
   currentStep,
   stepIndex,
@@ -33,25 +24,34 @@ export default function BstPseudocodePanel({
   canPrev,
   canNext,
   onReset,
-}: BstPseudocodePanelProps) {
-  const { lines, activeLineIndices, executedLineIndices, description } = getBstPseudocodeState(
+}: GraphPseudocodePanelProps) {
+  const { lines, activeLineIndices, executedLineIndices, description } = getGraphPseudocodeState(
     operation,
     currentStep,
     stepIndex,
     steps
   )
+  const title =
+    operation?.type === 'traverse'
+      ? operation.traversal === 'bfs'
+        ? 'Breadth-first search'
+        : 'Depth-first search'
+      : 'Pseudocode'
+
   if (lines.length === 0) {
     return (
       <div className="rounded-xl border border-slate-200 bg-slate-100/80 p-4 dark:border-slate-800 dark:bg-slate-950/40">
         <h3 className="text-sm font-semibold text-slate-700 mb-2 dark:text-slate-100">Pseudocode</h3>
-        <p className="text-slate-500 text-sm dark:text-slate-400">Select an operation and run to see the pseudocode step by step.</p>
+        <p className="text-slate-500 text-sm dark:text-slate-400">
+          Choose BFS or DFS, pick a start node, and run a traversal to see pseudocode here.
+        </p>
       </div>
     )
   }
 
   return (
     <div className="rounded-xl border border-slate-200 bg-slate-100/80 p-4 flex flex-col gap-3 dark:border-slate-800 dark:bg-slate-950/40">
-      <h3 className="text-sm font-semibold text-slate-700 dark:text-slate-100">{operationTitle(operation)}</h3>
+      <h3 className="text-sm font-semibold text-slate-700 dark:text-slate-100">{title}</h3>
       {description && (
         <p
           className="text-sm text-slate-700 bg-rose-50/80 border border-rose-200/80 rounded-lg px-3 py-2 dark:text-slate-100 dark:bg-rose-950/30 dark:border-rose-900/50"
