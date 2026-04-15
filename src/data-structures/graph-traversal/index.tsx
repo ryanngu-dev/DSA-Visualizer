@@ -53,7 +53,15 @@ export default function GraphTraversalVisualizer() {
   return (
     <div className="mx-auto flex w-full max-w-6xl flex-col gap-4">
       <section className="w-full" aria-label="Visualization">
-        <VisualizationCanvas className="items-stretch justify-start py-3 sm:py-4">
+        <VisualizationCanvas
+          className="items-stretch justify-start py-3 sm:py-4"
+          stepControls={{
+            onPrev: viz.prevStep,
+            onNext: viz.nextStep,
+            canPrev: viz.canPrev,
+            canNext: viz.canStep,
+          }}
+        >
           <div className="flex w-full flex-col items-stretch gap-2">
             <GraphTraversalToolbar
               graph={graph}

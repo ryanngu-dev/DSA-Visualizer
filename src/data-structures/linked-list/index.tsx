@@ -18,7 +18,14 @@ export default function LinkedListVisualizer() {
     <div className="flex flex-col gap-6 w-full max-w-6xl mx-auto">
       {/* Top: visualization */}
       <section ref={canvasRef} className="w-full" aria-label="Visualization">
-        <VisualizationCanvas>
+        <VisualizationCanvas
+          stepControls={{
+            onPrev: viz.prevStep,
+            onNext: viz.nextStep,
+            canPrev: viz.canPrev,
+            canNext: viz.canStep,
+          }}
+        >
           <LinkedListView
             nodes={viz.nodes}
             currentStep={viz.currentStep}

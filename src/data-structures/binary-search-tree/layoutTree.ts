@@ -54,15 +54,16 @@ export function layoutTree(
 
   const xs = nodes.map((n) => n.x)
   const ys = nodes.map((n) => n.y)
-  const minX = Math.min(...xs)
-  const maxX = Math.max(...xs)
   const maxY = Math.max(...ys)
   const pad = 48
   const nodeR = 26
-  const width = Math.max(320, maxX - minX + nodeR * 2 + pad * 2)
+  const rootX = nodes.find((n) => n.id === root.id)?.x ?? nodes[0]!.x
+  const farthestFromRoot = Math.max(...xs.map((x) => Math.abs(x - rootX)))
+  const minHalfWidth = farthestFromRoot + nodeR + pad
+  const width = Math.max(320, minHalfWidth * 2)
   const height = Math.max(200, maxY + nodeR * 2 + pad * 2)
 
-  const offsetX = pad + nodeR - minX
+  const offsetX = width / 2 - rootX
   const offsetY = pad + nodeR
 
   const shifted = nodes.map((n) => ({

@@ -1,16 +1,16 @@
-import { useState, useRef } from 'react'
-import { BinarySearchTree } from './BinarySearchTree'
-import { useBstVisualization } from '../../hooks/useBstVisualization'
-import BSTView from './BSTView'
-import BstPseudocodePanel from './BstPseudocodePanel'
-import BstControlPanel from './BstControlPanel'
+import { useRef, useState } from 'react'
 import VisualizationCanvas from '../../components/VisualizationCanvas'
+import { Queue } from './Queue'
+import { useQueueVisualization } from '../../hooks/useQueueVisualization'
+import QueueView from './QueueView'
+import QueueControlPanel from './QueueControlPanel'
+import QueuePseudocodePanel from './QueuePseudocodePanel'
 
-const MAX_NODES = 15
+const MAX_NODES = 12
 
-export default function BinarySearchTreeVisualizer() {
-  const [tree] = useState(() => new BinarySearchTree())
-  const viz = useBstVisualization(tree)
+export default function QueueVisualizer() {
+  const [queue] = useState(() => new Queue())
+  const viz = useQueueVisualization(queue)
   const canvasRef = useRef<HTMLDivElement>(null)
 
   return (
@@ -24,22 +24,22 @@ export default function BinarySearchTreeVisualizer() {
             canNext: viz.canStep,
           }}
         >
-          <BSTView treeSnapshot={viz.treeSnapshot} currentStep={viz.currentStep} message={viz.message} />
+          <QueueView queueSnapshot={viz.queueSnapshot} currentStep={viz.currentStep} message={viz.message} />
         </VisualizationCanvas>
       </section>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <section
-          className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-800 dark:bg-slate-900"
+          className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6 dark:border-slate-800 dark:bg-slate-900"
           aria-label="Operations"
         >
-          <BstControlPanel tree={tree} setSteps={viz.setSteps} play={viz.play} maxNodes={MAX_NODES} />
+          <QueueControlPanel queue={queue} setSteps={viz.setSteps} play={viz.play} maxNodes={MAX_NODES} />
         </section>
         <section
-          className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-800 dark:bg-slate-900"
+          className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6 dark:border-slate-800 dark:bg-slate-900"
           aria-label="Pseudocode"
         >
-          <BstPseudocodePanel
+          <QueuePseudocodePanel
             operation={viz.operation}
             currentStep={viz.currentStep}
             stepIndex={viz.stepIndex}
