@@ -7,6 +7,7 @@ import GraphTraversalVisualizer from './data-structures/graph-traversal'
 import BinaryHeapVisualizer from './data-structures/binary-heap'
 import StackVisualizer from './data-structures/stack'
 import QueueVisualizer from './data-structures/queue'
+import HashMapVisualizer from './data-structures/hash-map'
 
 export default function App() {
   const [dataStructure, setDataStructure] = useState<DataStructureId>('linked-list')
@@ -81,6 +82,19 @@ export default function App() {
       <button
         type="button"
         role="tab"
+        aria-selected={dataStructure === 'hash-map'}
+        onClick={() => setDataStructure('hash-map')}
+        className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-950 ${
+          dataStructure === 'hash-map'
+            ? 'bg-accent text-white shadow-md ring-2 ring-accent/60 ring-offset-2 ring-offset-white dark:ring-offset-slate-950'
+            : 'bg-slate-100 text-slate-700 hover:bg-slate-200 dark:bg-slate-900 dark:text-slate-200 dark:hover:bg-slate-800'
+        }`}
+      >
+        Hash Map
+      </button>
+      <button
+        type="button"
+        role="tab"
         aria-selected={dataStructure === 'graph-traversal'}
         onClick={() => setDataStructure('graph-traversal')}
         className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-950 ${
@@ -106,6 +120,8 @@ export default function App() {
         <StackVisualizer />
       ) : dataStructure === 'queue' ? (
         <QueueVisualizer />
+      ) : dataStructure === 'hash-map' ? (
+        <HashMapVisualizer />
       ) : dataStructure === 'graph-traversal' ? (
         <GraphTraversalVisualizer />
       ) : (

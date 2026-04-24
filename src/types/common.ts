@@ -9,6 +9,7 @@ export type DataStructureId =
   | 'graph-traversal'
   | 'stack'
   | 'queue'
+  | 'hash-map'
 
 export interface StepBase {
   message?: string
