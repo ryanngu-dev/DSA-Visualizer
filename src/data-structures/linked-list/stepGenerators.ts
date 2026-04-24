@@ -50,11 +50,13 @@ export function stepsForRemoveAt(list: LinkedList, index: number): LinkedListSte
     steps.push({ type: 'done', message: 'Invalid index; no removal' })
     return steps
   }
+  const arr = list.toArray()
+  const removeNodeId = arr[index]?.id
   for (let i = 0; i < index; i++) {
     steps.push({ type: 'highlight', index: i, message: `Traversing to index ${index}` })
   }
-  steps.push({ type: 'reroute', index, message: `Linking previous node to next` })
-  steps.push({ type: 'removeAt', index, message: `Removing node at index ${index}` })
+  steps.push({ type: 'reroute', index, removeNodeId, message: `Linking previous node to next` })
+  steps.push({ type: 'removeAt', index, removeNodeId, message: `Removing node at index ${index}` })
   steps.push({ type: 'done', message: `Removed node at index ${index}` })
   return steps
 }
@@ -63,6 +65,7 @@ export function stepsForRemoveByValue(list: LinkedList, value: number): LinkedLi
   const steps: LinkedListStep[] = []
   const arr = list.toArray()
   const foundIndex = arr.findIndex((n) => n.value === value)
+  const removeNodeId = foundIndex >= 0 ? arr[foundIndex]?.id : undefined
   if (foundIndex === -1) {
     for (let i = 0; i < arr.length; i++) {
       steps.push({ type: 'highlight', index: i, message: `Searching for ${value}` })
@@ -74,8 +77,8 @@ export function stepsForRemoveByValue(list: LinkedList, value: number): LinkedLi
     steps.push({ type: 'highlight', index: i, message: `Searching for ${value}` })
   }
   steps.push({ type: 'highlight', index: foundIndex, message: `Found ${value}` })
-  steps.push({ type: 'reroute', index: foundIndex, message: `Linking previous node to next` })
-  steps.push({ type: 'removeByValue', value, message: `Removing first occurrence of ${value}` })
+  steps.push({ type: 'reroute', index: foundIndex, removeNodeId, message: `Linking previous node to next` })
+  steps.push({ type: 'removeByValue', value, removeNodeId, message: `Removing first occurrence of ${value}` })
   steps.push({ type: 'done', message: `Removed ${value}` })
   return steps
 }

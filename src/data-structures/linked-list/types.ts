@@ -21,9 +21,9 @@ export type LinkedListStep =
   | { type: 'insertHead'; value: number; message?: string }
   | { type: 'insertTail'; value: number; message?: string }
   | { type: 'insertAt'; index: number; value: number; message?: string }
-  | { type: 'reroute'; index: number; message?: string }
-  | { type: 'removeAt'; index: number; message?: string }
-  | { type: 'removeByValue'; value: number; message?: string }
+  | { type: 'reroute'; index: number; removeNodeId?: string; message?: string }
+  | { type: 'removeAt'; index: number; removeNodeId?: string; message?: string }
+  | { type: 'removeByValue'; value: number; removeNodeId?: string; message?: string }
   | { type: 'found'; index: number; message?: string }
   | { type: 'notFound'; message?: string }
   | { type: 'done'; message?: string }

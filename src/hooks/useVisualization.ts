@@ -97,13 +97,15 @@ export function useVisualization(list: LinkedList) {
   }, [stepIndex, stepStates])
 
   const currentStepForDisplay = stepIndex < steps.length ? steps[stepIndex] : null
-  const isRemoveStep = currentStepForDisplay?.type === 'removeAt' || currentStepForDisplay?.type === 'removeByValue'
+  const keepPreRemoveSnapshot =
+    currentStepForDisplay?.type === 'removeByValue' ||
+    (currentStepForDisplay?.type === 'removeAt' && currentStepForDisplay.index > 0)
   const displayedNodes =
     stepStates.length > 0
       ? stepStates[
           stepDirection === -1
             ? stepIndex
-            : isRemoveStep
+            : keepPreRemoveSnapshot
               ? stepIndex
               : Math.min(stepIndex + 1, stepStates.length - 1)
         ]!

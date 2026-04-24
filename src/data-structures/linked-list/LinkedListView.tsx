@@ -179,9 +179,18 @@ export default function LinkedListView({
 
   const removingNodeId = (() => {
     if (!currentStep) return null
+    if (
+      (currentStep.type === 'reroute' || currentStep.type === 'removeAt') &&
+      currentStep.removeNodeId
+    ) {
+      return currentStep.removeNodeId
+    }
     if (currentStep.type === 'reroute' || currentStep.type === 'removeAt') {
       const idx = currentStep.index
       return nodes[idx]?.id ?? null
+    }
+    if (currentStep.type === 'removeByValue' && currentStep.removeNodeId) {
+      return currentStep.removeNodeId
     }
     if (currentStep.type === 'removeByValue' && currentStep.value !== undefined) {
       const n = nodes.find((node) => node.value === currentStep.value)
@@ -194,7 +203,11 @@ export default function LinkedListView({
 
   const bypassIds = useMemo(() => {
     if (!currentStep) return null
-    if (currentStep.type !== 'reroute' && currentStep.type !== 'removeAt' && currentStep.type !== 'removeByValue') {
+    const isRerouteOrRemoveStep =
+      currentStep.type === 'reroute' ||
+      currentStep.type === 'removeAt' ||
+      currentStep.type === 'removeByValue'
+    if (!isRerouteOrRemoveStep) {
       return null
     }
 
@@ -232,13 +245,6 @@ export default function LinkedListView({
 
     return null
   }, [currentStep, nodes, removingIndex])
-
-  // After the node has actually been removed from the array (no removingIndex),
-  // hide straight arrows during the remove step so no arrow briefly points at
-  // empty space while layout reflows.
-  const hideAllStraightArrowsDuringRemove =
-    removingIndex === -1 &&
-    (currentStep?.type === 'removeAt' || currentStep?.type === 'removeByValue')
 
   useLayoutEffect(() => {
     const lane = laneRef.current
@@ -318,7 +324,7 @@ export default function LinkedListView({
               {bypassPath.visible && (
                 <motion.svg
                   key="bypass-arrow"
-                  className="absolute left-0 top-0 pointer-events-none text-slate-400 z-10"
+                  className="absolute left-0 top-0 pointer-events-none text-slate-400 dark:text-slate-500 z-10"
                   width={laneRef.current?.getBoundingClientRect().width ?? 1}
                   height={140}
                   viewBox={`0 0 ${laneRef.current?.getBoundingClientRect().width ?? 1} 140`}
@@ -345,14 +351,14 @@ export default function LinkedListView({
               {nodes.map((node) => {
                 const isRemoving = removingNodeId === node.id
                 const isPrevOfRemoving = bypassIds?.prevId === node.id
-                // During the actual remove step (when the list is reflowing),
-                // hide all straight arrows so we never see an arrow briefly
-                // pointing at nothing. During the reroute step, hide ONLY the
-                // straight arrow from prev -> removing; keep the removing
-                // node's own arrow so it disappears together with the node.
+                const isActualRemoveStep =
+                  currentStep?.type === 'removeAt' || currentStep?.type === 'removeByValue'
+                // Keep unaffected arrows visible at all times.
+                // Hide only the arrow that's actively being bypassed and the
+                // outgoing arrow on the node currently being removed.
                 const hideArrowFromThisNode =
-                  hideAllStraightArrowsDuringRemove ||
-                  (bypassPath.visible && isPrevOfRemoving && bypassIds)
+                  (bypassPath.visible && isPrevOfRemoving && bypassIds) ||
+                  (isActualRemoveStep && isRemoving)
 
                 return (
                   <div
